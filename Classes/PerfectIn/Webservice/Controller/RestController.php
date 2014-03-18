@@ -16,9 +16,9 @@ class RestController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function handleAction() { 
-		$class 		= $this->request->getArgument('class');
-		$method 	= $this->request->getArgument('method');		
-		$proxy 		= new \PerfectIn\Webservice\WebserviceProxy($class, $method);
+		$class 		= $this->request->getArgument('class');	
+		$method 	= $this->request->getArgument('method');	
+		$proxy 		= new \PerfectIn\Webservice\WebserviceProxy($class);
 
 		try {
 			$result 	= call_user_func_array(array($proxy, $method) , $this->getArguments($class, $method));	
