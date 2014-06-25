@@ -66,6 +66,12 @@ class WebserviceCall {
 	protected $validatorResolver;
 	
 	/**
+	 * @var \TYPO3\Flow\Log\LoggerInterface
+	 * @Flow\Inject
+	 */
+	protected $logger;
+	
+	/**
 	 * constructor
 	 * 
 	 * @param string $class
@@ -86,17 +92,19 @@ class WebserviceCall {
 		$methodParameters 	= $this->reflectionService->getMethodParameters($this->class, $this->method);
 		$validators 		= $this->validatorResolver->buildMethodArgumentsValidatorConjunctions($this->class, $this->method);
 		$validationGroups 	= array('Default', ucfirst($this->method));
-			
+		
 		foreach ($methodParameters AS $name => $methodParamater) {
-			$validator 		= $validators[$name];
-			$validator->addValidator($this->validatorResolver->getBaseValidatorConjunction($methodParamater['type'], $validationGroups));
+			//FIXME: mixed datatype is not yet supported for mapping
+			$methodParamaterType = $methodParamater['type'] == 'mixed' ? 'string' : $methodParamater['type'];
 			
-			$argument = new Argument($name, $methodParamater['type']);
+			$validator 		= $validators[$name];
+			$validator->addValidator($this->validatorResolver->getBaseValidatorConjunction($methodParamaterType, $validationGroups));
+			
+			$argument = new Argument($name, $methodParamaterType);
 			$argument->setPosition($methodParamater['position']);
 			$argument->setRequired(!$methodParamater['optional']);
 			$argument->setDefaultValue($methodParamater['defaultValue']);		
 			$argument->setValidator($validator);
-			
 			if (isset($this->args[$argument->getPosition()])) {
 				$argument->setValue($this->args[$argument->getPosition()]);
 				if (!$argument->isValid()) {
@@ -143,8 +151,36 @@ class WebserviceCall {
 	 * @return mixed
 	 */
 	public function __invoke() {
-		return call_user_func_array(array($this->objectManager->get($this->class), $this->method), $this->getParameters());
+		$this->logger->log('STARTED:'.$this->class.'::'.$this->method, LOG_INFO, $this->getParameters());
+		$response = call_user_func_array(array($this->objectManager->get($this->class), $this->method), $this->getParameters());
+		$response = $this->mapToSimpleType($response);
+		$this->logger->log('FINISHED:'.$this->class.'::'.$this->method, LOG_INFO, $response);
+		return $response;
 	}
 	
+	/**
+	 * map data to simple data structures
+	 * 
+	 * @param mixed $data
+	 * @return mixed
+	 */
+	protected function mapToSimpleType($data) {
+		if (is_array($data) || is_object($data) && $data instanceof \Traversable) {
+			$return = array();
+			foreach ($data AS $index => $item) {
+				$return[$index] = $this->mapToSimpleType($item);
+			}
+		} else if(is_object($data)) {
+			$return = new \stdClass();
+			$properties = \TYPO3\Flow\Reflection\ObjectAccess::getGettablePropertyNames($data);
+			foreach ($properties AS $property) {
+				$return->{$property} = $this->mapToSimpleType(\TYPO3\Flow\Reflection\ObjectAccess::getProperty($data, $property));
+			}
+		} else {
+			$return = $data;
+		}
+		
+		return $return;
+	}
 }	
 	

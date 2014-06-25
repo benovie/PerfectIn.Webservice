@@ -19,7 +19,7 @@ class SoapController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$class 		= $this->request->getArgument('class');		
 		$proxy 		= new \PerfectIn\Webservice\WebserviceProxy($class);
 
-		$soapserver = new \SoapServer(null, array('uri' => "http://webservice.perfectin/"));
+		$soapserver = new \SoapServer($this->request->getArgument('wsdl'));
 		$soapserver->setObject($proxy);
 		
 		ob_start();

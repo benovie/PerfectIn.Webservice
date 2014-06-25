@@ -1,0 +1,15 @@
+PerfectIn\Webservice\WebserviceCall:
+  properties:
+    logger:
+      object:
+        factoryObjectName: TYPO3\Flow\Log\LoggerFactory
+        factoryMethodName: create
+        arguments:
+          1:
+            value: 'PerfectIn_Webservice'
+          2:
+            setting: PerfectIn.Webservice.log.logger
+          3:
+            setting: PerfectIn.Webservice.log.backend
+          4:
+            setting: PerfectIn.Webservice.log.backendOptions

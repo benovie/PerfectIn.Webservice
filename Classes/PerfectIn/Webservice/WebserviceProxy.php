@@ -35,9 +35,7 @@ class WebserviceProxy {
 	 * @throws \Exception
 	 */
 	public function __call($method, $args) {
-		
 		$webserviceCall = new WebserviceCall($this->class, $method, $args);
-		
 		if ($webserviceCall->isValid()) {
 			return $webserviceCall();	
 		} else {

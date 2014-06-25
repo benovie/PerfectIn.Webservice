@@ -1,48 +1,46 @@
-PerfectIn.Webservice is a TYPO3.Flow package to create webservices
+PerfectIn.Webservice is a TYPO3.Flow package to create webservices for existing code
 
 
-## Example webservice
+## Example webservice - Find all TYPO3\Flow\Security\Role with REST
+
+webservices.yaml:
 
 ```
-<?php
+-
+  name: Roles
+  operations:
+    -
+      name: findAll
+        - 
+          type: rest
+          options:
+            url: webservice/security/role
+            method: GET
+      implementation:
+        class: TYPO3\Flow\Security\Policy\RoleRepository
+        method: findAll 
+ 
+```       
+    
+## Example webservice - Find one TYPO3\Flow\Security\Role with REST
+        
 
-use PerfectIn\Webservice\Annotations as Webservice;
+## Example webservice - Find all TYPO3\Flow\Security\Roles with REST
 
-/**
- * some webservice
- */
-class SomeWebservice {
-	
-	/**
-	 * doSomething
-	 *
-	 * @Webservice\Rest(method="POST",uri="/webservice/rest/something/{something}")
-	 * @Webservice\Soap(endpoint="/webservice/soap/something")
-	 * @param string $something
-	 * @return void
-	 */
-	public function doSomething($something) {
-	}
-}
+webservices.yaml:
+
+```
+    -
+      name: read
+      bindings:
+        - 
+          type: rest
+          options:
+            url: webservice/security/role/{identifier}
+            method: GET
+      implementation:
+        class: TYPO3\Flow\Security\Policy\RoleRepository
+        method: findByIdentifier 
 ```
 
-
-## via REST
-
-- add @PerfectIn\Webservice\Annotations\Rest annotation to a method
-- annotation option: method => HTTP method to use 
-- annotation option: uri => uri to use for request
-- typo3 route notation for a param {paramname} is available as parameter with same name in your method
-
-
-generate Routes for the rest webservices
-
-> ./flow perfectin.webservice route:all
-
-
-## via SOAP
-
-- add @PerfectIn\Webservice\Annotations\Soap annotation to a method
-- annotation option: endpoint => soap endpoint
-
-> ./flow perfectin.webservice route:all
+> Note that {identifier} is automatically mapped to $identifier parameter

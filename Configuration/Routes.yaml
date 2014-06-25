@@ -1,0 +1,77 @@
+
+-
+  name: 'Soap route for Roles'
+  uriPattern: webservice/soap/security/role
+  httpMethods:
+    - POST
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Soap
+    '@action': handle
+    class: TYPO3\Flow\Security\Policy\RoleRepository
+-
+  name: 'Rest route for Roles:readAll'
+  uriPattern: webservice/security/role
+  httpMethods:
+    - GET
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    class: TYPO3\Flow\Security\Policy\RoleRepository
+    method: findAll
+-
+  name: 'Rest route for Roles:read'
+  uriPattern: 'webservice/security/role/{identifier}'
+  httpMethods:
+    - GET
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    class: TYPO3\Flow\Security\Policy\RoleRepository
+    method: findByIdentifier
+-
+  name: 'Rest route for Presentation:readAll'
+  uriPattern: webservice/ui/presentation
+  httpMethods:
+    - GET
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    class: PerfectIn\Ui\Service\PresentationService
+    method: getYamlConfigurations
+-
+  name: 'Rest route for Presentation:read'
+  uriPattern: 'webservice/ui/presentation/{identifier}'
+  httpMethods:
+    - GET
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    class: PerfectIn\Ui\Service\PresentationService
+    method: getYamlConfiguration
+-
+  name: 'Rest route for Presentation:create'
+  uriPattern: webservice/ui/presentation
+  httpMethods:
+    - POST
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    class: PerfectIn\Ui\Service\PresentationService
+    method: createPresentation
+-
+  name: 'Rest route for Presentation:update'
+  uriPattern: webservice/ui/presentation
+  httpMethods:
+    - PUT
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    class: PerfectIn\Ui\Service\PresentationService
+    method: updatePresentation
