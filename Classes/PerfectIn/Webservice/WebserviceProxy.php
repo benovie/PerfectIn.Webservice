@@ -11,20 +11,20 @@ use TYPO3\Flow\Annotations as Flow;
 class WebserviceProxy {
 	
 	/**
-	 * class to proxy
+	 * webservice name
 	 * 
 	 * @var string
 	 */
-	protected $class;
+	protected $webservice;
 	
 	/**
 	 * constructor
 	 * 
-	 * @param string $class
+	 * @param string $webservice
 	 * @param string $method
 	 */
-	public function __construct($class) {
-		$this->class= $class;
+	public function __construct($webservice) {
+		$this->webservice = $webservice;
 	}
 	
 	/**
@@ -35,14 +35,8 @@ class WebserviceProxy {
 	 * @throws \Exception
 	 */
 	public function __call($method, $args) {
-		$webserviceCall = new WebserviceCall($this->class, $method, $args);
-		if ($webserviceCall->isValid()) {
-			return $webserviceCall();	
-		} else {
-			$exception = new Exception\ValidationException('ValidationFailed', 1392379627);
-			$exception->setValidationResults($webserviceCall->getValidationResult());
-			throw $exception;
-		}
+		$webservice = new Webservice($this->webservice);
+		return $webservice->call($method, $args);
 	}
 	
 }	

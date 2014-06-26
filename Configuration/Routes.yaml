@@ -1,6 +1,19 @@
 
 -
-  name: 'Soap route for Roles'
+  name: 'Rest route for Api:readAll'
+  uriPattern: webservice/api
+  httpMethods:
+    - GET
+  defaults:
+    '@package': PerfectIn.Webservice
+    '@controller': Rest
+    '@action': handle
+    webservice: Api
+    operation: readAll
+    class: PerfectIn\Webservice\Api
+    method: getForAllWebservices
+-
+  name: 'Soap route for Api'
   uriPattern: webservice/soap/security/role
   httpMethods:
     - POST
@@ -9,19 +22,9 @@
     '@controller': Soap
     '@action': handle
     class: TYPO3\Flow\Security\Policy\RoleRepository
+    webservice: Api
 -
-  name: 'Rest route for Roles:readAll'
-  uriPattern: webservice/security/role
-  httpMethods:
-    - GET
-  defaults:
-    '@package': PerfectIn.Webservice
-    '@controller': Rest
-    '@action': handle
-    class: TYPO3\Flow\Security\Policy\RoleRepository
-    method: findAll
--
-  name: 'Rest route for Roles:read'
+  name: 'Rest route for Api:read'
   uriPattern: 'webservice/security/role/{identifier}'
   httpMethods:
     - GET
@@ -29,6 +32,8 @@
     '@package': PerfectIn.Webservice
     '@controller': Rest
     '@action': handle
+    webservice: Api
+    operation: read
     class: TYPO3\Flow\Security\Policy\RoleRepository
     method: findByIdentifier
 -
@@ -40,6 +45,8 @@
     '@package': PerfectIn.Webservice
     '@controller': Rest
     '@action': handle
+    webservice: Presentation
+    operation: readAll
     class: PerfectIn\Ui\Service\PresentationService
     method: getYamlConfigurations
 -
@@ -51,6 +58,8 @@
     '@package': PerfectIn.Webservice
     '@controller': Rest
     '@action': handle
+    webservice: Presentation
+    operation: read
     class: PerfectIn\Ui\Service\PresentationService
     method: getYamlConfiguration
 -
@@ -62,6 +71,8 @@
     '@package': PerfectIn.Webservice
     '@controller': Rest
     '@action': handle
+    webservice: Presentation
+    operation: create
     class: PerfectIn\Ui\Service\PresentationService
     method: createPresentation
 -
@@ -73,5 +84,7 @@
     '@package': PerfectIn.Webservice
     '@controller': Rest
     '@action': handle
+    webservice: Presentation
+    operation: update
     class: PerfectIn\Ui\Service\PresentationService
     method: updatePresentation

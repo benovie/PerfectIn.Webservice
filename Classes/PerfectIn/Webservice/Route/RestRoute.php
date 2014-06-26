@@ -29,6 +29,8 @@ class RestRoute implements RouteInterface {
 					'@package' => 'PerfectIn.Webservice',
 					'@controller' => 'Rest',
 					'@action' => 'handle',
+					'webservice' => $webservice,
+					'operation' => $operation,
 					'class' => $implementation['class'],
 					'method' => $implementation['method']
 			)

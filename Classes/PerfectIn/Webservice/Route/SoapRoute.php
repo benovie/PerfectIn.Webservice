@@ -29,7 +29,8 @@ class SoapRoute implements RouteInterface {
 				'@package' => 'PerfectIn.Webservice',
 				'@controller' => 'Soap',
 				'@action' => 'handle',
-				'class' => $implementation['class']
+				'class' => $implementation['class'],
+				'webservice' => $webservice
 			)
 		);
 	}

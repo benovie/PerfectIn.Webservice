@@ -1,0 +1,14 @@
+Api:
+  name: Api
+  operations:
+    -
+      name: readAll
+      bindings:
+        - 
+          type: rest
+          options:
+            url: webservice/api
+            method: GET
+      implementation:
+        class: PerfectIn\Webservice\Api
+        method: getForAllWebservices

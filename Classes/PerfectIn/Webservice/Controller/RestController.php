@@ -17,11 +17,13 @@ class RestController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function handleAction() { 
 		$class 		= $this->request->getArgument('class');	
-		$method 	= $this->request->getArgument('method');	
+		$method 	= $this->request->getArgument('method');
+		$webservice 	= $this->request->getArgument('webservice');	
+		$operation 		= $this->request->getArgument('operation');	
 		
 		try {
-			$proxy 		= new \PerfectIn\Webservice\WebserviceProxy($class);
-			$result 	= call_user_func_array(array($proxy, $method) , $this->getArguments($class, $method));	
+			$proxy 		= new \PerfectIn\Webservice\WebserviceProxy($webservice);
+			$result 	= call_user_func_array(array($proxy, $operation) , $this->getArguments($class, $method));	
 			$this->response->setHeader('Content-type','application/json');
 			$this->response->setContent(json_encode($result));
 		} catch(\Exception $exception) {

@@ -2,14 +2,12 @@
 namespace PerfectIn\Webservice;
 
 use TYPO3\Flow\Annotations as Flow;
-use PerfectIn\Webservice\Annotations as Webservice;
 
 /**
  * api
  */
 class Api{
-	
-	
+		
 	/**
 	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Reflection\ReflectionService
@@ -18,27 +16,44 @@ class Api{
 	
 	
 	/**
-	 * @Webservice\Rest(method="GET",uri="webservice/api/rest")
+	 * @var \TYPO3\Flow\Configuration\ConfigurationManager
+	 * @Flow\Inject
+	 */
+	protected $configurationManager;
+	
+	/**
+	 * get for all webservices
+	 * 
 	 * @return array
 	 */
-	public function readAll() {
-		$webservices 		= array();	
-		$annotationClass 	= 'PerfectIn\Webservice\Annotations\Rest';
-		$webserviceClasses 	= $this->reflectionService->getClassesContainingMethodsAnnotatedWith($annotationClass);
+	public function getForAllWebservices() {
 		
-		foreach($webserviceClasses AS $webserviceClass) {	
-			$webserviceClassMethods = get_class_methods($webserviceClass);
-			if ($webserviceClassMethods) {
-				foreach($webserviceClassMethods AS $method) {
-					$annotation = $this->reflectionService->getMethodAnnotation($webserviceClass, $method, $annotationClass);
-					if ($annotation) {
-						$webservices[] = array('configuration'=>$annotation,'params'=>$this->reflectionService->getMethodParameters($webserviceClass, $method));
-					}
+		$this->configurationManager->registerConfigurationType('Webservices');
+		$webservices = $this->configurationManager->getConfiguration('Webservices');
+		
+		foreach ($webservices AS &$webservice) {
+			foreach ($webservice['operations'] AS &$operation) {
+				$methodParameters = $this->reflectionService->getMethodParameters(
+					$operation['implementation']['class'], 
+					$operation['implementation']['method']);
+				$operation['parameters'] = array();
+				foreach($methodParameters AS $methodParameterName => $methodParameter) {
+					$operation['parameters'][] = array(
+						'name' => $methodParameterName,
+						'type' => $this->getForType($methodParameter['type'])
+					);
 				}
 			}
-		}
-		
+		};
+
 		return $webservices;
+	}
+	
+	public function getForType($type) {
+		
+		
+		
+		return $type;
 	}
 	
 }

@@ -1,4 +1,4 @@
-PerfectIn\Webservice\WebserviceCall:
+PerfectIn\Webservice\Aspect\LoggingAspect:
   properties:
     logger:
       object:
